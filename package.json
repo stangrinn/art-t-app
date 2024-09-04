@@ -1,6 +1,6 @@
 {
   "name": "ar-t-app",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Progressive art + augmented reality ",
   "main": "main.js",
   "scripts": {
