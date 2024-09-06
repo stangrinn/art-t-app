@@ -5,14 +5,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const start = async() => {
     const mindarThree = new window.MINDAR.IMAGE.MindARThree({
       container: document.body,
-      imageTargetSrc: './assets/targets/sintel.mind',
+      imageTargetSrc: './assets/targets/mother-day.mind',
     });
     const {renderer, scene, camera} = mindarThree;
 
-    const video = await loadVideo("./assets/videos/sintel.mp4");
+    const video = await loadVideo("./assets/videos/MDanimation.mp4");
     // const video = await loadVideo("./assets/videos/MDanimation.mov");
     
-    const plane = new THREE.Mesh(new THREE.PlaneGeometry(1, 204/480), new THREE.MeshBasicMaterial({map: new THREE.VideoTexture(video)}));
+    const plane = new THREE.Mesh(new THREE.PlaneGeometry(1, 1.5, 2, 2), new THREE.MeshBasicMaterial({map: new THREE.VideoTexture(video)}));
 
     const anchor = mindarThree.addAnchor(0);
     anchor.group.add(plane);
