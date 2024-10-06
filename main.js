@@ -1,7 +1,7 @@
 import { loadVideo } from "./libs/loader.js";
 import { createChromaMaterial } from './libs/chroma-video.js';
 const THREE = window.MINDAR.IMAGE.THREE;
-const sourceName = 'EP1';
+const sourceName = 'EP0.6';
 document.addEventListener('DOMContentLoaded', async () => {
     const mindarThree = new window.MINDAR.IMAGE.MindARThree({
         container: document.body,
@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const video1 = await loadVideo(`./assets/videos/${sourceName}.mp4`); 
     const texture1 = new THREE.VideoTexture(video1);
     const material1 = createChromaMaterial(texture1, 0x8D00FF);
-    const geometry1 = new THREE.PlaneGeometry(1, 4000/3200);
+    const geometry1 = new THREE.PlaneGeometry(1, 1024/1024);
     const plane1 = new THREE.Mesh(geometry1, material1);
     video1.loop = true;
 
