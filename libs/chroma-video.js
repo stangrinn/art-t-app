@@ -1,4 +1,4 @@
-import * as THREE from "./three.js-r132/build/three.module.js";
+const THREE = window.MINDAR.IMAGE? window.MINDAR.IMAGE.THREE: window.MINDAR.FACE.THREE;
 
 export const createChromaMaterial = (texture, keyColor) => {
   const keyColorObject = new THREE.Color(keyColor);

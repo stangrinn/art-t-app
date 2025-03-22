@@ -1,16 +1,5 @@
-import {GLTFLoader} from "./three.js-r132/examples/jsm/loaders/GLTFLoader.js";
-import * as THREE from "./three.js-r132/build/three.module.js";
-
-//const THREE = window.MINDAR.IMAGE? window.MINDAR.IMAGE.THREE: window.MINDAR.FACE.THREE;
-
-export const loadGLTF = (path) => {
-  return new Promise((resolve, reject) => {
-    const loader = new GLTFLoader();
-    loader.load(path, (gltf) => {
-      resolve(gltf);
-    });
-  });
-}
+// import * as THREE from 'three';
+const THREE = window.MINDAR.IMAGE ? window.MINDAR.IMAGE.THREE : window.MINDAR.FACE.THREE;
 
 export const loadAudio = (path) => {
   return new Promise((resolve, reject) => {
@@ -38,7 +27,7 @@ export const loadTexture = (path) => {
     const loader = new THREE.TextureLoader();
     loader.load(path, (texture) => {
       resolve(texture);
-    }); 
+    });
   });
 }
 
@@ -48,8 +37,8 @@ export const loadTextures = (paths) => {
   for (let i = 0; i < paths.length; i++) {
     promises.push(new Promise((resolve, reject) => {
       loader.load(paths[i], (texture) => {
-	resolve(texture);
-      }); 
+        resolve(texture);
+      });
     }));
   }
   return Promise.all(promises);
