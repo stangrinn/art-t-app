@@ -10,13 +10,13 @@ const THREE = window.MINDAR.IMAGE.THREE;
  */
 export const useVideoScene = async (sourceName, useChroma = false) => {
     const video = await loadPrepareVideo(sourceName);
-    
+
     const { material, texture } = createMaterialWithVideo(video, useChroma);
-    
+
     const plane = createPlaneWithVideo(video, material, texture);
-    
+
     const { domVideo, videoContainer } = createDOMVideo(sourceName); // Create the DOM video
-    
+
     await runARScene(plane, video, domVideo, videoContainer, sourceName);
 }
 
@@ -26,8 +26,10 @@ const runARScene = async (plane, video, domVideo, videoContainer, sourceName) =>
         container: document.body,
         imageTargetSrc: `./assets/targets/${sourceName}.mind`,
         maxTrack: 1,
-        filterMinCF: 0.00005,
-        filterBeta: 0.001,
+        filterMinCF: 0.00001,
+        filterBeta: 0.0005,
+        warmupTolerance: 3,
+        missTolerance: 10
     });
 
     const { renderer, scene, camera } = mindarThree;
@@ -42,8 +44,54 @@ const runARScene = async (plane, video, domVideo, videoContainer, sourceName) =>
 
     await mindarThree.start();
 
+    let lastPosition = new THREE.Vector3();
+    
+
+    const positionBuffer = []; // Буфер для хранения последних N позиций
+    const bufferSize = 10; // Размер буфера
+    
+    function updatePositionWithBuffer(object) {
+        if (!anchor.visible) return;
+        
+        // Добавляем текущую позицию в буфер
+        positionBuffer.push(object.position.clone());
+
+        console.log('[updatePositionWithBuffer] positionBuffer =', positionBuffer);
+        
+        // Ограничиваем размер буфера
+        if (positionBuffer.length > bufferSize) {
+            positionBuffer.shift();
+        }
+        
+        // Вычисляем среднюю позицию
+        if (positionBuffer.length > 0) {
+            const avgPosition = new THREE.Vector3();
+            positionBuffer.forEach(pos => {
+                avgPosition.add(pos);
+            });
+            avgPosition.divideScalar(positionBuffer.length);
+            
+            // Применяем сглаженную позицию
+            object.position.copy(avgPosition);
+        }
+    }
+
     renderer.setAnimationLoop(() => {
+        updatePositionWithBuffer(plane);
         updateVideoPosition(plane, domVideo, video, camera, anchor.visible);
+        if (anchor.visible) {
+            const dampingFactor = 0.5;
+            const newPos = plane.position.clone();
+            plane.position.lerp(lastPosition, 1 - dampingFactor);
+            lastPosition.copy(newPos);
+
+            console.log('[updatePositionWithBuffer] lastPosition =', lastPosition);
+                
+            const newRotation = new THREE.Euler().copy(plane.rotation);
+            plane.rotation.x += (newRotation.x - plane.rotation.x) * dampingFactor;
+            plane.rotation.y += (newRotation.y - plane.rotation.y) * dampingFactor;
+            plane.rotation.z += (newRotation.z - plane.rotation.z) * dampingFactor;
+        }
         renderer.render(scene, camera);
     });
 
@@ -51,19 +99,18 @@ const runARScene = async (plane, video, domVideo, videoContainer, sourceName) =>
 }
 
 const updateVideoPosition = (plane, domVideo, video, camera, isAnchorVisible) => {
-    
+
     if (!isAnchorVisible) {
-        
-        if (domVideo.style.display === "block") 
+        if (domVideo.style.display === "block")
             releaseVideoToAR(plane, domVideo, video);
-        
+
         return;
     }
-    
+
     const { calculateScreenCoverage } = useCaclScreenCoverage();
     const screenCoverage = calculateScreenCoverage(plane, camera);
     const TARGET_COVERAGE = 0.8; // 80% экрана
-    
+
     // Check if the camera is close enough to the marker
     const isCloseEnough = screenCoverage > TARGET_COVERAGE;
     const isVideoOnScreen = domVideo.style.display === "block";
@@ -73,7 +120,7 @@ const updateVideoPosition = (plane, domVideo, video, camera, isAnchorVisible) =>
     else if (!isCloseEnough && isVideoOnScreen)
         releaseVideoToAR(plane, domVideo, video);
 
-    // console.log(`Screen coverage: ${(screenCoverage * 100).toFixed(2)}%`);
+    console.log(`Screen coverage: ${(screenCoverage * 100).toFixed(2)}%`);
 };
 
 const fixVideoOnScreen = (plane, domVideo, webglVideo) => {
@@ -134,8 +181,8 @@ const createDOMVideo = (sourceName) => {
     videoContainer.style.backgroundColor = 'rgba(0, 0, 0, 1)';
     videoContainer.style.zIndex = '990';
     document.body.appendChild(videoContainer);
-    
-    return {domVideo, videoContainer};
+
+    return { domVideo, videoContainer };
 };
 
 const loadPrepareVideo = async (sourceName) => {
@@ -156,14 +203,15 @@ const createMaterialWithVideo = (video, useChroma = false) => {
 }
 
 const createPlaneWithVideo = (video, material) => {
-    const width = 1;
-    const height = 1.37; // Fixed dimensions to prevent aspect-ratio-based distortion
-    const geometry = new THREE.PlaneGeometry(width, height);
+
+    const geometry = new THREE.PlaneGeometry(1, video.videoHeight / video.videoWidth);
     const plane = new THREE.Mesh(geometry, material);
-    
+
     plane.position.set(0, 0, 0);
     plane.rotation.set(0, 0, 0);
-    plane.matrixAutoUpdate = false; // Lock the transformation matrix
+
+    plane.matrixAutoUpdate = true; // Lock the transformation matrix
+
     plane.updateMatrix(); // Apply the locked transform
 
     return plane;

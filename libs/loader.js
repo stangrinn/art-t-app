@@ -1,5 +1,5 @@
-// import * as THREE from 'three';
-const THREE = window.MINDAR.IMAGE ? window.MINDAR.IMAGE.THREE : window.MINDAR.FACE.THREE;
+// Используем глобальный THREE, загруженный через CDN
+const THREE = window.THREE;
 
 export const loadAudio = (path) => {
   return new Promise((resolve, reject) => {

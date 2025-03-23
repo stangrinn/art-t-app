@@ -1,4 +1,5 @@
-const THREE = window.MINDAR.IMAGE? window.MINDAR.IMAGE.THREE: window.MINDAR.FACE.THREE;
+// Используем глобальный THREE, загруженный через CDN
+const THREE = window.THREE;
 
 export const createChromaMaterial = (texture, keyColor) => {
   const keyColorObject = new THREE.Color(keyColor);
