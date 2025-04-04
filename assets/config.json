@@ -1,0 +1,22 @@
+{
+  "targets": [
+    {
+      "name": "Magician",
+      "imageUrl": "https://helenagrinshpun.art/assets/targets/Magician.png",
+      "videoUrl": "https://helenagrinshpun.art/assets/videos/Magician.mp4",
+      "physicalWidth": 0.2
+    },
+    {
+      "name": "Empress",
+      "imageUrl": "https://helenagrinshpun.art/assets/targets/Empress.png",
+      "videoUrl": "https://helenagrinshpun.art/assets/videos/Empress.mp4",
+      "physicalWidth": 0.2
+    },
+    {
+      "name": "Fool",
+      "imageUrl": "https://helenagrinshpun.art/assets/targets/Fool.png",
+      "videoUrl": "https://helenagrinshpun.art/assets/videos/Fool.mp4",
+      "physicalWidth": 0.2
+    }
+  ]
+}
