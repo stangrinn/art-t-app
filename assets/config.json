@@ -1,6 +1,12 @@
 {
   "targets": [
     {
+      "name": "Emperor",
+      "imageUrl": "https://helenagrinshpun.art/assets/targets/Emperor.png",
+      "videoUrl": "https://helenagrinshpun.art/assets/videos/Emperor.mp4",
+      "physicalWidth": 0.2
+    },
+    {
       "name": "Magician",
       "imageUrl": "https://helenagrinshpun.art/assets/targets/Magician.png",
       "videoUrl": "https://helenagrinshpun.art/assets/videos/Magician.mp4",
