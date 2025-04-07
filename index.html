@@ -1,6 +1,10 @@
 <html>
   <head>
+    <title>Helena Grinshpun Art</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">    
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/Logo_FAV 16.png">
+    <link rel="icon" type="image/png" sizes="24x24" href="assets/icons/Logo_FAV 24.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/Logo_FAV 32.png">
     <style>
       html, body { position: relative; margin: 0; width: 100%; height: 100%; overflow: hidden }
       #app {
@@ -10,13 +14,26 @@
         width: 100%;
         height: 100%;
         text-align: center;
-        line-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      #app img {
+        max-width: 200px;
+        height: auto;
+      }
+      #app div {
+        font-size: 12px;
+        font-weight: 100;
+        color: #333;
       }
     </style>
   </head>
   <body>
     <div id="app">
-      Helena Grinshpun
+      <img src="assets/icons/Logo.png" alt="Helena Grinshpun Art Logo">
+      <!-- <div>[coming soon]</div> -->
     </div>
   </body>
 </html>
